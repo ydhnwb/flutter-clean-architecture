@@ -1,9 +1,11 @@
 
+import 'package:flutter_clean_architecture/data/login/remote/dto/login_response.dart';
+
 class LoginEntity {
-  late int id;
-  late String name;
-  late String email;
-  late String token;
+  int id;
+  String name;
+  String email;
+  String token;
 
   LoginEntity({
     required this.id,
@@ -11,4 +13,13 @@ class LoginEntity {
     required this.email,
     required this.token
     });
+
+  factory LoginEntity.toEntity(LoginResponse loginResponse){
+    return LoginEntity(
+        id: loginResponse.id!,
+        name: loginResponse.name!,
+        email: loginResponse.email!,
+        token: loginResponse.token!
+    );
+  }
 }

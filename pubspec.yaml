@@ -32,6 +32,7 @@ dependencies:
   dio: ^4.0.0
   equatable: ^2.0.2
   dartz: ^0.10.0-nullsafety.2
+  shared_preferences: ^2.0.6
 
 dev_dependencies:
   flutter_test:

@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   void test() async {
-    LoginRequest loginRequest = LoginRequest(email: "yudhanewbie@gmail.com", password: "yudhanewbie");
+    LoginRequest loginRequest = LoginRequest(email: "ahmadalbar@gmail.com", password: "yudhanewbie");
     var result = await this.widget.loginRepository.login(loginRequest);
     result.fold(
       (loginEntity) {
@@ -24,6 +24,7 @@ class _HomePageState extends State<HomePage> {
         print(loginEntity.email);
       },
       (failure) {
+
         print("Failure");
         print(failure);
 
