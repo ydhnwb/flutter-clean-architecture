@@ -3,7 +3,7 @@ import 'package:flutter_clean_architecture/data/common/interceptor/request_inter
 
 class NetworkModule {
   final Dio _dio = new Dio();
-  final String _baseUrl = "https://jsonplaceholder.typicode.com/";
+  final String _baseUrl = "https://golang-heroku.herokuapp.com/api/";
   final RequestInterceptor requestInterceptor;
 
   NetworkModule({required this.requestInterceptor});

@@ -15,21 +15,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
+  String info = "";
+
   void test() async {
     LoginRequest loginRequest = LoginRequest(email: "ahmadalbar@gmail.com", password: "yudhanewbie");
     var result = await this.widget.loginRepository.login(loginRequest);
     result.fold(
       (loginEntity) {
-        print("Supses");
-        print(loginEntity.email);
+        setInfoString(loginEntity.name);
       },
       (failure) {
-
-        print("Failure");
+        print("Failure: $failure");
         print(failure);
 
       },
     );
+  }
+
+  setInfoString(String s){
+    setState(() {
+      info = s;
+    });
   }
 
 
@@ -47,7 +53,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Clean architecture"),
       ),
       body: Container(
-        child: Center(child: Text("Hello")),
+        child: Center(child: Text(info)),
       ),
     );
   }
