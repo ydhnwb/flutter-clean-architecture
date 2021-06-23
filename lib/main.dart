@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: "Flutter clean architecture",
             theme: ThemeData(
-              primarySwatch: Colors.blue,
+              primarySwatch: Colors.green,
             ),
             home: LoginPage(),
           );
@@ -81,20 +81,6 @@ class MyApp extends StatelessWidget {
           );
         }
       },
-    );
-  }
-}
-
-class XXX extends StatelessWidget {
-  const XXX({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("HHH"),),
-      body: Container(
-        child: Text("hello world"),
-      ),
     );
   }
 }
