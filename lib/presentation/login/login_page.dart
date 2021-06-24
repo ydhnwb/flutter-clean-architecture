@@ -10,7 +10,8 @@ import 'package:flutter_clean_architecture/presentation/login/bloc/login_event.d
 import 'package:flutter_clean_architecture/presentation/login/bloc/login_state.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final LoginBloc loginBloc;
+  const LoginPage({Key? key, required this.loginBloc}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -19,7 +20,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _isShowPassword = false;
-  final _bloc = sl.get<LoginBloc>();
   final _formKey = GlobalKey<FormState>();
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
@@ -40,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
     if (_formKey.currentState!.validate()) {
       String email = _emailTextFieldController.text.toString().trim();
       String password = _passwordTextFieldController.text.toString().trim();
-      _bloc.add(LoginEventDoLogin(loginRequest: LoginRequest(email: email, password: password)));
+      widget.loginBloc.add(LoginEventDoLogin(loginRequest: LoginRequest(email: email, password: password)));
     }
   }
 
@@ -146,7 +146,7 @@ class _LoginPageState extends State<LoginPage> {
           child: SingleChildScrollView(
             child: Container(
               child: BlocConsumer<LoginBloc, LoginState>(
-                bloc: _bloc,
+                bloc: widget.loginBloc,
                 listener: (context, state){
                   _handleState(state);
                 },
