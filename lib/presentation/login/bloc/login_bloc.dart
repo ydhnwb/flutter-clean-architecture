@@ -10,7 +10,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc({required this.loginUseCase}) : super(LoginStateInit());
 
-  _setIsLoading(bool isLoading) async* {
+  Stream<LoginState> _setIsLoading(bool isLoading) async* {
+    print("ssss");
+    print(isLoading);
     yield LoginStateLoading(isLoading: isLoading);
   }
 
@@ -22,9 +24,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   }
 
   Stream<LoginState> login(LoginRequest loginRequest) async* {
-    _setIsLoading(true);
+    yield* _setIsLoading(true);
     var result = await loginUseCase.login(loginRequest);
-    _setIsLoading(false);
+    yield* _setIsLoading(false);
     yield* result.fold(
       (l) async* {
         yield LoginStateSuccessLogin(loginEntity: l);

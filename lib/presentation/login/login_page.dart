@@ -26,12 +26,12 @@ class _LoginPageState extends State<LoginPage> {
 
 
   void _handleState(state){
-    if(state is LoginStateLoading){
-      _isLoading = state.isLoading;
-    }else if(state is LoginStateSuccessLogin){
+    if(state is LoginStateSuccessLogin){
       print(state.loginEntity.name);
     }else if(state is LoginStateErrorLogin){
       print(state.message);
+    }else if(state is LoginStateLoading){
+      _isLoading = state.isLoading;
     }
   }
 
@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
-  Widget _signInForm(context){
+  Widget _signInForm(){
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16),
       child: Form(
@@ -106,7 +106,7 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 16),
 
             TextFormField(
-              obscureText: _isShowPassword,
+              obscureText: !_isShowPassword,
               controller: _passwordTextFieldController,
               decoration: InputDecoration(
                 hintText: "Password",
@@ -130,10 +130,8 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(height: 16,),
             
             PrimaryButton(
-              text: _isLoading ? "true" : "false",
-              onClick: () => {
-                _isLoading ? null : _doLogin()
-              },
+              text: "Login",
+              onClick: _isLoading ? null : _doLogin,
             )
           ],
         ),
@@ -147,19 +145,21 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-              child: BlocListener<LoginBloc, LoginState>(
+              child: BlocConsumer<LoginBloc, LoginState>(
                 bloc: _bloc,
                 listener: (context, state){
                   _handleState(state);
                 },
-                child: Column(
-                  children: [
-                    _headerWidget(),
-                    _loadingBar(),
-                    _signInForm(context),
-                    _createAccountSection()
-                  ],
-                ),
+                builder: (context, state) {
+                  return Column(
+                    children: [
+                      _headerWidget(),
+                      _loadingBar(),
+                      _signInForm(),
+                      _createAccountSection()
+                    ],
+                );
+                },
               )
             )
           )
