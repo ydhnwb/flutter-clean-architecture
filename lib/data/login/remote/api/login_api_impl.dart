@@ -13,12 +13,16 @@ class LoginApiImpl implements LoginApi {
 
   @override
   Future<LoginEntity> login(LoginRequest loginRequest) async {
-    final response = await dio.post("auth/login", data: loginRequest.toJson());
-    if(response.statusCode == 200){
-      var converted = WrappedResponse<LoginResponse>.fromJson(response.data, (data) => LoginResponse.fromJson(data));
-      return LoginEntity(id: converted.data!.id!, token: converted.data!.token!, email: converted.data!.email!, name: converted.data!.name!);
+    try{
+      final response = await dio.post("auth/login", data: loginRequest.toJson());
+      if(response.statusCode == 200){
+        var converted = WrappedResponse<LoginResponse>.fromJson(response.data, (data) => LoginResponse.fromJson(data));
+        return LoginEntity(id: converted.data!.id!, token: converted.data!.token!, email: converted.data!.email!, name: converted.data!.name!);
+      }
+      throw ServerException(httpStatusCode: response.statusCode!);
+    }on DioError catch(e){
+      throw ServerException(httpStatusCode: e.response?.statusCode == null ? -1 : e.response!.statusCode!);      
     }
-    throw ServerException();
   }
 
 

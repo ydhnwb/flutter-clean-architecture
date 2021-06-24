@@ -9,6 +9,7 @@ import 'package:flutter_clean_architecture/data/login/repository/login_repositor
 import 'package:flutter_clean_architecture/domain/login/repository/login_repository.dart';
 import 'package:flutter_clean_architecture/domain/login/usecase/login_usecase.dart';
 import 'package:flutter_clean_architecture/presentation/home/home_page.dart';
+import 'package:flutter_clean_architecture/presentation/login/bloc/login_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/login/login_page.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -49,6 +50,9 @@ Future<void> init() async {
   sl.registerLazySingleton(
       () => LoginUseCase(loginRepository: sl())
   );
+
+  //blocs
+  sl.registerFactory(() => LoginBloc(loginUseCase: sl()));
 
 
 }

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/data/login/remote/dto/login_request.dart';
+import 'package:flutter_clean_architecture/main.dart';
 import 'package:flutter_clean_architecture/presentation/common/shared_component/primary_button.shared_component.dart';
 import 'package:flutter_clean_architecture/presentation/common/shared_component/text_header.shared_component.dart';
+import 'package:flutter_clean_architecture/presentation/login/bloc/login_bloc.dart';
+import 'package:flutter_clean_architecture/presentation/login/bloc/login_event.dart';
+import 'package:flutter_clean_architecture/presentation/login/bloc/login_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,19 +19,29 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   bool _isShowPassword = false;
+  final _bloc = sl.get<LoginBloc>();
   final _formKey = GlobalKey<FormState>();
   final _emailTextFieldController = TextEditingController();
   final _passwordTextFieldController = TextEditingController();
+
+
+  void _handleState(state){
+    if(state is LoginStateLoading){
+      _isLoading = state.isLoading;
+    }else if(state is LoginStateSuccessLogin){
+      print(state.loginEntity.name);
+    }else if(state is LoginStateErrorLogin){
+      print(state.message);
+    }
+  }
 
 
   void _doLogin(){
     if (_formKey.currentState!.validate()) {
       String email = _emailTextFieldController.text.toString().trim();
       String password = _passwordTextFieldController.text.toString().trim();
-      print(email);
-      print(password);
+      _bloc.add(LoginEventDoLogin(loginRequest: LoginRequest(email: email, password: password)));
     }
-
   }
 
   Widget _headerWidget(){
@@ -67,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
-  Widget _signInForm(){
+  Widget _signInForm(context){
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16),
       child: Form(
@@ -112,12 +128,11 @@ class _LoginPageState extends State<LoginPage> {
             ),
 
             SizedBox(height: 16,),
-
-
+            
             PrimaryButton(
-              text: "Login",
+              text: _isLoading ? "true" : "false",
               onClick: () => {
-                _doLogin()
+                _isLoading ? null : _doLogin()
               },
             )
           ],
@@ -132,15 +147,20 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
           child: SingleChildScrollView(
             child: Container(
-
-              child: Column(
-                children: [
-                  _headerWidget(),
-                  _loadingBar(),
-                  _signInForm(),
-                  _createAccountSection()
-                ],
-              ),
+              child: BlocListener<LoginBloc, LoginState>(
+                bloc: _bloc,
+                listener: (context, state){
+                  _handleState(state);
+                },
+                child: Column(
+                  children: [
+                    _headerWidget(),
+                    _loadingBar(),
+                    _signInForm(context),
+                    _createAccountSection()
+                  ],
+                ),
+              )
             )
           )
       )
