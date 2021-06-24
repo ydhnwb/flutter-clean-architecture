@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/data/common/module/shared_pref_module.dart';
 import 'package:flutter_clean_architecture/data/login/remote/dto/login_request.dart';
 import 'package:flutter_clean_architecture/domain/login/repository/login_repository.dart';
 import 'package:flutter_clean_architecture/domain/login/usecase/login_usecase.dart';
@@ -7,8 +10,9 @@ import 'package:flutter_clean_architecture/presentation/login/bloc/login_state.d
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginUseCase loginUseCase;
+  final SharedPreferenceModule sharedPreferenceModule;
 
-  LoginBloc({required this.loginUseCase}) : super(LoginStateInit());
+  LoginBloc({required this.loginUseCase, required this.sharedPreferenceModule}) : super(LoginStateInit());
 
   Stream<LoginState> _setIsLoading(bool isLoading) async* {
     print("ssss");
@@ -29,6 +33,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     yield* _setIsLoading(false);
     yield* result.fold(
       (l) async* {
+        sharedPreferenceModule.saveUserData(jsonEncode(l));
         yield LoginStateSuccessLogin(loginEntity: l);
       }, 
       (r) async* {

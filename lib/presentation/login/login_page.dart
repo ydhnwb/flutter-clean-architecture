@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/data/login/remote/dto/login_request.dart';
 import 'package:flutter_clean_architecture/main.dart';
+import 'package:flutter_clean_architecture/presentation/common/infra/router.dart';
 import 'package:flutter_clean_architecture/presentation/common/shared_component/primary_button.shared_component.dart';
 import 'package:flutter_clean_architecture/presentation/common/shared_component/text_header.shared_component.dart';
 import 'package:flutter_clean_architecture/presentation/login/bloc/login_bloc.dart';
@@ -27,12 +29,29 @@ class _LoginPageState extends State<LoginPage> {
 
   void _handleState(state){
     if(state is LoginStateSuccessLogin){
-      print(state.loginEntity.name);
+      Navigator.pushReplacementNamed(context, AppRouter.ROUTE_HOME);
     }else if(state is LoginStateErrorLogin){
-      print(state.message);
+      _showAlert(state.message);
     }else if(state is LoginStateLoading){
       _isLoading = state.isLoading;
     }
+  }
+
+  void _showAlert(String message){
+    showCupertinoDialog(
+      context: context, 
+      builder: (context) {
+        return AlertDialog(
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context), 
+              child: Text("OK")
+            )
+          ],
+        );
+      }
+    );
   }
 
 

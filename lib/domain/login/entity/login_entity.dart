@@ -22,4 +22,13 @@ class LoginEntity {
         token: loginResponse.token!
     );
   }
+
+  Map toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
+    "token": token
+  };
+
+  
 }

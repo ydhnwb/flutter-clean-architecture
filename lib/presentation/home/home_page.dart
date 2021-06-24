@@ -1,16 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_clean_architecture/data/login/remote/dto/login_request.dart';
-import 'package:flutter_clean_architecture/domain/common/base/base_result.dart';
-import 'package:flutter_clean_architecture/domain/login/repository/login_repository.dart';
-import 'package:flutter_clean_architecture/domain/login/usecase/login_usecase.dart';
+import 'package:flutter_clean_architecture/data/common/module/shared_pref_module.dart';
+import 'package:flutter_clean_architecture/domain/login/entity/login_entity.dart';
+import 'package:flutter_clean_architecture/main.dart';
+import 'package:flutter_clean_architecture/presentation/common/infra/router.dart';
 
 class HomePage extends StatefulWidget {
-  // final LoginRepository loginRepository;
-  final LoginUseCase loginUseCase;
 
-  // const HomePage({Key? key, required this.loginRepository}) : super(key: key);
-
-  const HomePage({Key? key, required this.loginUseCase}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -18,36 +16,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
-  String info = "";
-
-  void test() async {
-    LoginRequest loginRequest = LoginRequest(email: "ahmadalbar@gmail.com", password: "yudhanewbie");
-    // var result = await this.widget.loginRepository.login(loginRequest);
-    var result = await this.widget.loginUseCase.login(loginRequest);
-    result.fold(
-      (loginEntity) {
-        setInfoString(loginEntity.name);
-      },
-      (failure) {
-        print("Failure: $failure");
-        print(failure);
-
-      },
-    );
-  }
-
-  setInfoString(String s){
-    setState(() {
-      info = s;
-    });
-  }
-
+  final SharedPreferenceModule pref = sl.get();
 
   @override
   void initState() {
+    _checkIsLoggedIn();
     super.initState();
-    test();
+  }
+
+
+  void _checkIsLoggedIn(){
+    if(pref.getUserData().isEmpty){
+      _goToLoginPage();
+    }
+  }
+
+  void _goToLoginPage(){
+    Navigator.popAndPushNamed(context, AppRouter.ROUTE_LOGIN);
   }
 
 
@@ -58,7 +43,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Clean architecture"),
       ),
       body: Container(
-        child: Center(child: Text(info)),
+        child: Center(child: Text(pref.getUserData())),
       ),
     );
   }

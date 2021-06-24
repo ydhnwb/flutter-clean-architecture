@@ -2,17 +2,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferenceModule {
   final SharedPreferences pref;
-  static const String _PREF_TOKEN = "token";
+  static const String _PREF_USER = "user_data";
 
   SharedPreferenceModule({required this.pref});
 
-  void setToken(String token) => pref.setString(_PREF_TOKEN, token);
+  void clear() => pref.clear();
 
-  String getToken() {
-    String token = pref.getString(_PREF_TOKEN) ?? "";
-    return token;
+  void saveUserData(String userDataInJson) => pref.setString(_PREF_USER, userDataInJson);
+
+  String getUserData() {
+    String userDataInJson = pref.getString(_PREF_USER) ?? "";
+    return userDataInJson;
   }
 
-  void clear() => pref.clear();
+
 
 }

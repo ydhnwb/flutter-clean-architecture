@@ -54,7 +54,10 @@ Future<void> init() async {
   );
 
   //blocs
-  sl.registerFactory(() => LoginBloc(loginUseCase: sl()));
+  sl.registerFactory(() => LoginBloc(
+    loginUseCase: sl(),
+    sharedPreferenceModule: sl()
+  ));
 
 
 }

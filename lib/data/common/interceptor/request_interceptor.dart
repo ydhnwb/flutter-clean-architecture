@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_clean_architecture/data/common/module/shared_pref_module.dart';
 
@@ -8,8 +10,11 @@ class RequestInterceptor extends Interceptor {
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    String token = pref.getToken();
-    options.headers["Authorization"] = token;
+    String userData = pref.getUserData();
+    if(userData.isNotEmpty){
+      String token = jsonDecode(userData)['token'];
+      options.headers["Authorization"] = token;
+    }
     return super.onRequest(options, handler);
   }
 
