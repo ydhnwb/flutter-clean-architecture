@@ -12,6 +12,7 @@ import 'package:flutter_clean_architecture/presentation/common/infra/router.dart
 import 'package:flutter_clean_architecture/presentation/home/home_page.dart';
 import 'package:flutter_clean_architecture/presentation/login/bloc/login_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/login/login_page.dart';
+import 'package:flutter_clean_architecture/presentation/register/register.page.dart';
 import 'package:flutter_clean_architecture/presentation/splash/splash.page.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -84,7 +85,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.green,
             ),
-            home: SplashPage(),
+            home: RegisterPage(),
           );
         }else{
           return Center(
