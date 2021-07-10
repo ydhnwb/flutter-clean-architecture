@@ -6,12 +6,16 @@ import 'package:flutter_clean_architecture/data/common/module/shared_pref_module
 import 'package:flutter_clean_architecture/data/login/remote/api/login_api.dart';
 import 'package:flutter_clean_architecture/data/login/remote/api/login_api_impl.dart';
 import 'package:flutter_clean_architecture/data/login/repository/login_repository_impl.dart';
+import 'package:flutter_clean_architecture/data/register/remote/api/register_api.dart';
+import 'package:flutter_clean_architecture/data/register/remote/api/register_api_impl.dart';
+import 'package:flutter_clean_architecture/data/register/repository/register_repository_impl.dart';
 import 'package:flutter_clean_architecture/domain/login/repository/login_repository.dart';
 import 'package:flutter_clean_architecture/domain/login/usecase/login_usecase.dart';
+import 'package:flutter_clean_architecture/domain/register/repository/register_repository.dart';
+import 'package:flutter_clean_architecture/domain/register/usecase/register_usecase.dart';
 import 'package:flutter_clean_architecture/presentation/common/infra/router.dart';
-import 'package:flutter_clean_architecture/presentation/home/home_page.dart';
 import 'package:flutter_clean_architecture/presentation/login/bloc/login_bloc.dart';
-import 'package:flutter_clean_architecture/presentation/login/login_page.dart';
+import 'package:flutter_clean_architecture/presentation/register/bloc/register_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/register/register.page.dart';
 import 'package:flutter_clean_architecture/presentation/splash/splash.page.dart';
 import 'package:get_it/get_it.dart';
@@ -20,7 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  final SharedPreferences pref = await SharedPreferences.getInstance();
+  // final SharedPreferences pref = await SharedPreferences.getInstance();
   sl.registerSingletonAsync<SharedPreferences>(() => SharedPreferences.getInstance());
 
   sl.registerSingletonWithDependencies<SharedPreferenceModule>(
@@ -35,29 +39,29 @@ Future<void> init() async {
   );
 
   //module
-  sl.registerLazySingleton<Dio>(
-      () => NetworkModule(requestInterceptor: sl()).provideDio(),
-  );
+  sl.registerLazySingleton<Dio>(() => NetworkModule(requestInterceptor: sl()).provideDio());
 
   //datasource
-  sl.registerLazySingleton<LoginApi>(
-      () => LoginApiImpl(dio: sl())
-  );
+  sl.registerLazySingleton<LoginApi>(() => LoginApiImpl(dio: sl()));
+  sl.registerLazySingleton<RegisterApi>(() => RegisterApiImpl(dio: sl()));
 
   //repositories
-  sl.registerLazySingleton<LoginRepository>(
-      () => LoginRepositoryImpl(loginApi: sl())
-  );
+  sl.registerLazySingleton<LoginRepository>(() => LoginRepositoryImpl(loginApi: sl()));
+  sl.registerLazySingleton<RegisterRepository>(() => RegisterRepositoryImpl(registerApi: sl()));
 
   //use cases
-  sl.registerLazySingleton(
-      () => LoginUseCase(loginRepository: sl())
-  );
+  sl.registerLazySingleton(() => LoginUseCase(loginRepository: sl()));
+  sl.registerLazySingleton(() => RegisterUseCase(registerRepository: sl()));
 
   //blocs
   sl.registerFactory(() => LoginBloc(
     loginUseCase: sl(),
     sharedPreferenceModule: sl()
+  ));
+
+  sl.registerFactory(() => RegisterBloc(
+      registerUseCase: sl(),
+      sharedPreferenceModule: sl()
   ));
 
 
@@ -85,7 +89,7 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               primarySwatch: Colors.green,
             ),
-            home: RegisterPage(),
+            home: SplashPage(),
           );
         }else{
           return Center(

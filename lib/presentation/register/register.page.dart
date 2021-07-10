@@ -1,9 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_clean_architecture/data/register/remote/dto/register_request.dart';
+import 'package:flutter_clean_architecture/presentation/common/infra/router.dart';
 import 'package:flutter_clean_architecture/presentation/common/shared_component/primary_button.shared_component.dart';
 import 'package:flutter_clean_architecture/presentation/common/shared_component/text_header.shared_component.dart';
+import 'package:flutter_clean_architecture/presentation/register/bloc/register_bloc.dart';
+import 'package:flutter_clean_architecture/presentation/register/bloc/register_event.dart';
+import 'package:flutter_clean_architecture/presentation/register/bloc/register_state.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({ Key? key }) : super(key: key);
+  final RegisterBloc registerBloc;
+
+  const RegisterPage({ Key? key, required this.registerBloc }) : super(key: key);
 
   @override
   _RegisterPageState createState() => _RegisterPageState();
@@ -16,6 +25,45 @@ class _RegisterPageState extends State<RegisterPage> {
   final _nameInputController = TextEditingController();
   final _emailInputController = TextEditingController();
   final _passwordInputController = TextEditingController();
+
+
+  void _handleState(state){
+    if(state is RegisterPageStateLoading){
+      _isLoading = state.isLoading;
+    }else if(state is RegisterPageStateSuccess){
+      Navigator.pushReplacementNamed(context, AppRouter.ROUTE_HOME);
+    }else if(state is RegisterPageStateError){
+      _showAlert(state.message);
+    }
+  }
+
+
+  void _showAlert(String message){
+    showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(message),
+            actions: [
+              TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("OK")
+              )
+            ],
+          );
+        }
+    );
+  }
+
+  void _doRegister(){
+    if(_formKey.currentState!.validate()){
+      String name = _nameInputController.text.toString().trim();
+      String email = _emailInputController.text.toString().trim();
+      String password = _passwordInputController.text.toString().trim();
+      RegisterRequest req = RegisterRequest(name: name, email: email, password: password);
+      widget.registerBloc.add(RegisterPageEventDoRegister(registerRequest: req));
+    }
+  }
 
 
   Widget _headerWidget(){
@@ -99,9 +147,9 @@ class _RegisterPageState extends State<RegisterPage> {
               
             ),
 
-            SizedBox(height: 16,),
+            SizedBox(height: 16),
 
-            PrimaryButton(text: "Create account", onClick:() => {})
+            PrimaryButton(text: "Create account", onClick: _isLoading ? null : _doRegister)
           ],
         )
       ),
@@ -116,12 +164,20 @@ class _RegisterPageState extends State<RegisterPage> {
       child: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              _headerWidget(),
-              _loadingBar(),
-              _signUpForm()
-            ],
+          child: BlocConsumer<RegisterBloc, RegisterPageState>(
+            bloc: widget.registerBloc,
+            listener: (context, state) => {
+              _handleState(state)
+            },
+            builder: (context, state){
+              return Column(
+                children: [
+                  _headerWidget(),
+                  _loadingBar(),
+                  _signUpForm()
+                ],
+              );
+            },
           ),
         ),
       ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_clean_architecture/data/login/remote/dto/login_request.dart';
-import 'package:flutter_clean_architecture/main.dart';
 import 'package:flutter_clean_architecture/presentation/common/infra/router.dart';
 import 'package:flutter_clean_architecture/presentation/common/shared_component/primary_button.shared_component.dart';
 import 'package:flutter_clean_architecture/presentation/common/shared_component/text_header.shared_component.dart';
@@ -63,6 +62,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _goToRegisterPage(){
+    Navigator.pushNamed(context, AppRouter.ROUTE_REGISTER);
+  }
+
   Widget _headerWidget(){
     return Container(
       margin: EdgeInsets.only(top: 36, left: 16, right: 16),
@@ -90,7 +93,9 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 28),
       child: InkWell(
-        onTap: () => {},
+        onTap: () => {
+          _goToRegisterPage()
+        },
         child: Padding(
           padding: EdgeInsets.all(8),
           child: Text("Create a new account", style: TextStyle(decoration: TextDecoration.underline))

@@ -15,8 +15,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc({required this.loginUseCase, required this.sharedPreferenceModule}) : super(LoginStateInit());
 
   Stream<LoginState> _setIsLoading(bool isLoading) async* {
-    print("ssss");
-    print(isLoading);
     yield LoginStateLoading(isLoading: isLoading);
   }
 

@@ -1,4 +1,4 @@
-import 'package:flutter_clean_architecture/data/common/response/response_wrapper.dart';
+import 'package:flutter_clean_architecture/data/common/util/serializable.dart';
 
 class LoginResponse implements Serializable {
   int? id;

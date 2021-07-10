@@ -16,16 +16,14 @@ class _SplashPageState extends State<SplashPage> {
   final SharedPreferenceModule pref = sl.get();
 
   startSplash() async {
-    if(pref.getUserData().isNotEmpty){
-      return Timer(Duration(seconds: 2), (){
+    return Timer(Duration(seconds: 2), (){
+      if(pref.getUserData().isNotEmpty){
         Navigator.pushReplacementNamed(context, AppRouter.ROUTE_HOME);
-      });
-    }else{
-      return Timer(Duration(seconds: 2), (){
+      }else{
         Navigator.pushReplacementNamed(context, AppRouter.ROUTE_LOGIN);
-      });
-    }
+      }
 
+    });
   }
 
   @override

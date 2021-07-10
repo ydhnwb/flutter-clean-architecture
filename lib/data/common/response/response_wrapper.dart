@@ -1,6 +1,4 @@
-abstract class Serializable {
-  Map<String, dynamic> toJson();
-}
+import 'package:flutter_clean_architecture/data/common/util/serializable.dart';
 
 class WrappedResponse <T extends Serializable> {
   bool status;
