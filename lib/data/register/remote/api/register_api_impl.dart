@@ -18,7 +18,7 @@ class RegisterApiImpl implements RegisterApi {
     try{
       final response = await dio.post("auth/register", data: registerRequest.toJson());
       if(response.statusCode == 201){
-        var converted = WrappedResponse<RegisterResponse>.fromJson(json.decode(response.data), (data) => RegisterResponse.fromJson(data));
+        var converted = WrappedResponse<RegisterResponse>.fromJson(response.data, (data) => RegisterResponse.fromJson(data));
         var registerEntity = RegisterEntity.toEntity(converted.data!);
         return registerEntity;
       }

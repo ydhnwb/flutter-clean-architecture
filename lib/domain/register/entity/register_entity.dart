@@ -16,4 +16,11 @@ class RegisterEntity {
       token: registerResponse.token
     );
   }
+
+  Map toJson() => {
+    "id": id,
+    "name": name,
+    "email": email,
+    "token": token
+  };
 }

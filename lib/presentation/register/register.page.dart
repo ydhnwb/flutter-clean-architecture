@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if(state is RegisterPageStateLoading){
       _isLoading = state.isLoading;
     }else if(state is RegisterPageStateSuccess){
-      Navigator.pushReplacementNamed(context, AppRouter.ROUTE_HOME);
+      Navigator.pushNamedAndRemoveUntil(context, AppRouter.ROUTE_HOME, (r) => false);
     }else if(state is RegisterPageStateError){
       _showAlert(state.message);
     }
