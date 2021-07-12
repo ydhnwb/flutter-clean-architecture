@@ -12,15 +12,15 @@ class LoginRepositoryImpl implements LoginRepository {
 
   LoginRepositoryImpl({ required this.loginApi });
 
-  /* Since login will always use the remote data source (api), it should handle ServerException only */
   @override
   Future<Either<LoginEntity, Failure>> login(LoginRequest loginRequest) async {
     try{
       var result = await loginApi.login(loginRequest);
       return Left(result);
-    } on ServerException catch(e){
-      String errorMessage = ErrorMapper.getErrorMessage(e.httpStatusCode);
-      return Right(ServerFailure(message: errorMessage));
+    } on BaseException catch(e){
+      return Right(BaseFailure(message: e.message, code: e.code!));
+      // String errorMessage = ErrorMapper.getErrorMessage(e.httpStatusCode);
+      // return Right(Failure(message: errorMessage));
     }
   }
   

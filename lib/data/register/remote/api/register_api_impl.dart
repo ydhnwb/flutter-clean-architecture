@@ -17,14 +17,16 @@ class RegisterApiImpl implements RegisterApi {
   Future<RegisterEntity> register(RegisterRequest registerRequest) async {
     try{
       final response = await dio.post("auth/register", data: registerRequest.toJson());
+      var converted = WrappedResponse<RegisterResponse>.fromJson(response.data, (data) => RegisterResponse.fromJson(data));
       if(response.statusCode == 201){
-        var converted = WrappedResponse<RegisterResponse>.fromJson(response.data, (data) => RegisterResponse.fromJson(data));
         var registerEntity = RegisterEntity.toEntity(converted.data!);
         return registerEntity;
       }
-      throw ServerException(httpStatusCode: response.statusCode!);
+      throw BaseException(message: converted.message, code: response.statusCode);
     }on DioError catch(e){
-      throw ServerException(httpStatusCode: e.response?.statusCode == null ? -1 : e.response!.statusCode!);      
+      throw BaseException(message: e.message, code: e.response?.statusCode);
+    }on Exception catch(e){
+      throw BaseException(message: e.toString());
     }
   }
 

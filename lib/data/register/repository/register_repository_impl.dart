@@ -17,9 +17,8 @@ class RegisterRepositoryImpl implements RegisterRepository {
     try{
       var response  = await registerApi.register(registerRequest);
       return Left(response);
-    }on ServerException catch(e){
-      String errorMessage = ErrorMapper.getErrorMessage(e.httpStatusCode);
-      return Right(ServerFailure(message: errorMessage));
+    }on BaseException catch(e){
+      return Right(BaseFailure(message: e.message, code: e.code!));
     }
   }
 }

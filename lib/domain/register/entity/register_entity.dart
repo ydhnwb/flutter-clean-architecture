@@ -17,10 +17,10 @@ class RegisterEntity {
     );
   }
 
-  Map toJson() => {
-    "id": id,
-    "name": name,
-    "email": email,
-    "token": token
-  };
+  // Map toJson() => {
+  //   "id": id,
+  //   "name": name,
+  //   "email": email,
+  //   "token": token
+  // };
 }
