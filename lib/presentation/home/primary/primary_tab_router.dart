@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_clean_architecture/main.dart';
 import 'package:flutter_clean_architecture/presentation/home/primary/primary_tab.dart';
 import 'package:flutter_clean_architecture/presentation/home/primary/primary_tab_detail.dart';
 
@@ -10,7 +11,7 @@ class PrimaryTabRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case PRIMARY_TAB_ROOT:
-        return MaterialPageRoute(builder: (_) => PrimaryTab());
+        return MaterialPageRoute(builder: (_) => PrimaryTab(primaryTabBloc: sl()));
       case PRIMARY_TAB_DETAIL:
         return MaterialPageRoute(builder: (_) => PrimaryTabDetail());
       default:
