@@ -6,14 +6,20 @@ import 'package:flutter_clean_architecture/data/common/module/shared_pref_module
 import 'package:flutter_clean_architecture/data/login/remote/api/login_api.dart';
 import 'package:flutter_clean_architecture/data/login/remote/api/login_api_impl.dart';
 import 'package:flutter_clean_architecture/data/login/repository/login_repository_impl.dart';
+import 'package:flutter_clean_architecture/data/product/remote/api/product_api.dart';
+import 'package:flutter_clean_architecture/data/product/remote/api/product_api_impl.dart';
+import 'package:flutter_clean_architecture/data/product/repository/product_repository_impl.dart';
 import 'package:flutter_clean_architecture/data/register/remote/api/register_api.dart';
 import 'package:flutter_clean_architecture/data/register/remote/api/register_api_impl.dart';
 import 'package:flutter_clean_architecture/data/register/repository/register_repository_impl.dart';
 import 'package:flutter_clean_architecture/domain/login/repository/login_repository.dart';
 import 'package:flutter_clean_architecture/domain/login/usecase/login_usecase.dart';
+import 'package:flutter_clean_architecture/domain/product/repository/get_product_repository.dart';
+import 'package:flutter_clean_architecture/domain/product/usecase/find_all_product_usecase.dart';
 import 'package:flutter_clean_architecture/domain/register/repository/register_repository.dart';
 import 'package:flutter_clean_architecture/domain/register/usecase/register_usecase.dart';
 import 'package:flutter_clean_architecture/presentation/common/infra/router.dart';
+import 'package:flutter_clean_architecture/presentation/home/primary/bloc/primary_tab_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/login/bloc/login_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/register/bloc/register_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/register/register.page.dart';
@@ -24,7 +30,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 final sl = GetIt.instance;
 
 Future<void> init() async {
-  // final SharedPreferences pref = await SharedPreferences.getInstance();
   sl.registerSingletonAsync<SharedPreferences>(() => SharedPreferences.getInstance());
 
   sl.registerSingletonWithDependencies<SharedPreferenceModule>(
@@ -44,14 +49,17 @@ Future<void> init() async {
   //datasource
   sl.registerLazySingleton<LoginApi>(() => LoginApiImpl(dio: sl()));
   sl.registerLazySingleton<RegisterApi>(() => RegisterApiImpl(dio: sl()));
+  sl.registerLazySingleton<ProductApi>(() => ProductApiImpl(dio: sl()));
 
   //repositories
   sl.registerLazySingleton<LoginRepository>(() => LoginRepositoryImpl(loginApi: sl()));
   sl.registerLazySingleton<RegisterRepository>(() => RegisterRepositoryImpl(registerApi: sl()));
+  sl.registerLazySingleton<GetProductRepository>(() => ProductRepositoryImpl(productApi: sl()));
 
   //use cases
   sl.registerLazySingleton(() => LoginUseCase(loginRepository: sl()));
   sl.registerLazySingleton(() => RegisterUseCase(registerRepository: sl()));
+  sl.registerLazySingleton(() => FindAllProductUseCase(getProductRepository: sl()));
 
   //blocs
   sl.registerFactory(() => LoginBloc(
@@ -63,6 +71,8 @@ Future<void> init() async {
       registerUseCase: sl(),
       sharedPreferenceModule: sl()
   ));
+
+  sl.registerFactory(() => PrimaryTabBloc(findAllProductUseCase: sl()));
 
 
 }

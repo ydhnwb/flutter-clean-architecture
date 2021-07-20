@@ -1,3 +1,4 @@
+import 'package:flutter_clean_architecture/data/product/remote/dto/product_response.dart';
 import 'package:flutter_clean_architecture/domain/product/entity/user_product_entity.dart';
 
 class ProductEntity {
@@ -10,6 +11,15 @@ class ProductEntity {
 
   factory ProductEntity.fromJson(Map<String, dynamic> json) {
     return ProductEntity(id: json["id"], name: json["name"], price: json["price"], user: UserProductEntity.fromJson(json["user"]));
+  }
+
+  factory ProductEntity.toEntity(ProductResponse res){
+    return ProductEntity(
+        id: res.id!,
+        name: res.name!,
+        price: res.price!,
+        user: UserProductEntity.toEntity(res.user!)
+    );
   }
 
   Map<String, dynamic> toJson(){

@@ -16,7 +16,7 @@ class ProductResponse implements Serializable {
   factory ProductResponse.fromJson(Map<String, dynamic> json) {
     return ProductResponse(
         id: json["id"],
-        name: json["name"],
+        name: json["product_name"],
         price: json["price"],
         user: UserProductResponse.fromJson(json["user"]));
   }
@@ -25,7 +25,7 @@ class ProductResponse implements Serializable {
   Map<String, dynamic> toJson() {
     return {
       "id": this.id,
-      "name": this.name,
+      "product_name": this.name,
       "price": this.price,
       "user": this.user?.toJson()
     };

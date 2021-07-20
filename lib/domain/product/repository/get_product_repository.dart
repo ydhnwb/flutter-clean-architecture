@@ -4,5 +4,5 @@ import 'package:flutter_clean_architecture/domain/product/entity/product_entity.
 
 abstract class GetProductRepository {
   Future<Either<List<ProductEntity>, Failure>> getAllProduct();
-  Future<Either<ProductEntity, Failure>> getSingleProduct();
+  Future<Either<ProductEntity, Failure>> getSingleProduct(String id);
 }

@@ -4,6 +4,7 @@ import 'package:flutter_clean_architecture/domain/product/entity/product_entity.
 import 'package:flutter_clean_architecture/presentation/home/primary/bloc/primary_tab_bloc.dart';
 import 'package:flutter_clean_architecture/presentation/home/primary/bloc/primary_tab_event.dart';
 import 'package:flutter_clean_architecture/presentation/home/primary/bloc/primary_tab_state.dart';
+import 'package:flutter_clean_architecture/presentation/home/primary/component/product_item_component.dart';
 import 'package:flutter_clean_architecture/presentation/home/primary/primary_tab_router.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -51,7 +52,12 @@ class _PrimaryTabState extends State<PrimaryTab> {
     return ListView.builder(
       itemCount: _products.length,
       itemBuilder: (context, index) {
-        return Text(_products[index].name);
+        return ProductItem(
+          click: () => {
+            Navigator.pushNamed(context, PrimaryTabRouter.PRIMARY_TAB_DETAIL, arguments: _products[index].id.toString())
+          },
+          productEntity: _products[index]
+          );
       }
     );
   }
@@ -69,6 +75,9 @@ class _PrimaryTabState extends State<PrimaryTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Products"),
+      ),
       body: BlocConsumer<PrimaryTabBloc, PrimaryTabState>(
         bloc: widget.primaryTabBloc,
         listener: (context, state) {

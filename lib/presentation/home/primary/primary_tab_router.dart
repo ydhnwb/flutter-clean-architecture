@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/main.dart';
+import 'package:flutter_clean_architecture/presentation/detail/detail_page.dart';
 import 'package:flutter_clean_architecture/presentation/home/primary/primary_tab.dart';
-import 'package:flutter_clean_architecture/presentation/home/primary/primary_tab_detail.dart';
 
 class PrimaryTabRouter {
   static const PRIMARY_TAB_ROOT = "/";
@@ -13,7 +13,8 @@ class PrimaryTabRouter {
       case PRIMARY_TAB_ROOT:
         return MaterialPageRoute(builder: (_) => PrimaryTab(primaryTabBloc: sl()));
       case PRIMARY_TAB_DETAIL:
-        return MaterialPageRoute(builder: (_) => PrimaryTabDetail());
+        String productId = settings.arguments as String;
+        return MaterialPageRoute(builder: (_) => DetailPage(productId: productId));
       default:
         return MaterialPageRoute(builder: (_) => Scaffold(body: Center(child: Text("No route"))));
     }

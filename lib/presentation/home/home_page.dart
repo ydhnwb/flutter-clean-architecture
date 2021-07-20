@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_architecture/data/common/module/shared_pref_module.dart';
-import 'package:flutter_clean_architecture/domain/login/entity/login_entity.dart';
 import 'package:flutter_clean_architecture/main.dart';
 import 'package:flutter_clean_architecture/presentation/common/infra/router.dart';
-import 'package:flutter_clean_architecture/presentation/home/primary/primary_tab.dart';
 import 'package:flutter_clean_architecture/presentation/home/primary/primary_tab_router.dart';
 import 'package:flutter_clean_architecture/presentation/home/profile/profile_tab.dart';
 
@@ -17,15 +15,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<Widget> _tabs = <Widget>[
-      Navigator(
-        key: GlobalKey<NavigatorState>(),
-        initialRoute: PrimaryTabRouter.PRIMARY_TAB_ROOT,
-        onGenerateRoute: PrimaryTabRouter.generateRoute,
-      ),
-      ProfileTab(),
-  ];
 
+  //first is primary tab that contains a nested navigatiob
+  //second is profile tab without any navigation
+  var _tabProperties = [
+    GlobalKey<NavigatorState>(),
+    null
+  ];
   final SharedPreferenceModule pref = sl.get();
   int _selectedIndex = 0;
 
@@ -34,6 +30,24 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _checkIsLoggedIn();
     super.initState();
+  }
+
+  Widget _buildPrimaryTab(){
+    return Offstage(
+        offstage: _selectedIndex != 0,
+        child: Navigator(
+          key: _tabProperties[0],
+          initialRoute: PrimaryTabRouter.PRIMARY_TAB_ROOT,
+          onGenerateRoute: PrimaryTabRouter.generateRoute,
+        ),
+      );
+  }
+
+  Widget _buildProfileTab(){
+    return Offstage(
+      offstage: _selectedIndex != 1,
+      child: ProfileTab(),
+    );
   }
 
 
@@ -54,14 +68,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<bool> _shouldExitApp() async {
-    var key = _tabs[_selectedIndex].key;
+    var key = _tabProperties[_selectedIndex];
     if(key != null){
-      key as GlobalKey<NavigatorState>;
       bool shouldNotExitApp = await key.currentState!.maybePop();
       return !shouldNotExitApp;
     }
     return true;
-
   }
 
 
@@ -72,15 +84,14 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () async {
         return _shouldExitApp();
-        // var x = _tabs[_selectedIndex].key! as GlobalKey<NavigatorState>;
-        // bool isFirst = await x.currentState!.maybePop();
-        // return !isFirst;
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("Clean architecture"),
+        body: Stack(
+          children: [
+            _buildPrimaryTab(),
+            _buildProfileTab()
+          ],
         ),
-        body: _tabs[_selectedIndex],
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.green[600],

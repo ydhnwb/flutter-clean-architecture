@@ -27,7 +27,7 @@ class PrimaryTabBloc extends Bloc<PrimaryTabEvent, PrimaryTabState> {
       yield* _setLoading(true);
       var result = await findAllProductUseCase.invoke();
       yield* _setLoading(false);
-      result.fold(
+      yield* result.fold(
         (l) async* {
           final temps = <ProductEntity>[];
           temps.addAll(l);
