@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   Widget _buildProfileTab(){
     return Offstage(
       offstage: _selectedIndex != 1,
-      child: ProfileTab(),
+      child: ProfileTab(pref: sl()),
     );
   }
 
@@ -75,8 +75,6 @@ class _HomePageState extends State<HomePage> {
     }
     return true;
   }
-
-
 
 
   @override

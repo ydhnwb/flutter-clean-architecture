@@ -53,8 +53,11 @@ class _PrimaryTabState extends State<PrimaryTab> {
       itemCount: _products.length,
       itemBuilder: (context, index) {
         return ProductItem(
-          click: () => {
-            Navigator.pushNamed(context, PrimaryTabRouter.PRIMARY_TAB_DETAIL, arguments: _products[index].id.toString())
+          click: () async {
+            var isShouldRefresh = await Navigator.pushNamed(context, PrimaryTabRouter.PRIMARY_TAB_DETAIL, arguments: _products[index].id.toString());
+            if(isShouldRefresh == true){
+              _fetchProducts();
+            }
           },
           productEntity: _products[index]
           );
@@ -88,7 +91,12 @@ class _PrimaryTabState extends State<PrimaryTab> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
+        onPressed: () async {
+          var isShouldRefresh = await Navigator.pushNamed(context, PrimaryTabRouter.PRIMARY_TAB_CREATE);
+          if(isShouldRefresh == true){
+            _fetchProducts();
+          }
+        },
         child: Icon(Icons.add),
       ),
       
